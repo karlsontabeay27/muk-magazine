@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "titre": "MUK — cultural media",
+    "description": "MUK is a generational cultural media exploring the people, ideas and creations shaping contemporary culture."
+  },
+  "nav": {
+    "accueil": "Home",
+    "rubriques": "Sections",
+    "newsletter": "Newsletter",
+    "ouvrirMenu": "Open menu",
+    "fermerMenu": "Close menu",
+    "changerLangue": "Change language",
+    "versLangue": "Read in French"
+  },
+  "accueil": {
+    "aLaUne": "Featured",
+    "derniers": "Latest",
+    "derniersItalique": "stories",
+    "toutVoir": "See all"
+  },
+  "article": {
+    "lecture": "{minutes} min",
+    "sommaire": "Contents",
+    "galerie": "Gallery",
+    "piecesTenue": "What she’s wearing",
+    "retour": "Back to MUK {rubrique}",
+    "aLireEnsuite": "Read",
+    "aLireEnsuiteItalique": "next",
+    "traductionAbsente": "This story is only available in English for now.",
+    "traductionAbsenteEn": "This story is only available in French for now.",
+    "lireQuandMeme": "Read it in its original language"
+  },
+  "rubrique": {
+    "compteur_un": "{n} story",
+    "compteur_autre": "{n} stories"
+  },
+  "galerie": {
+    "agrandir": "Enlarge photo {n} of {total}",
+    "fermer": "Close",
+    "precedente": "Previous photo",
+    "suivante": "Next photo"
+  },
+  "newsletter": {
+    "titre": "Join",
+    "titreItalique": "the community",
+    "texte": "New stories, cultural recommendations, playlists, open calls and the creators we discover. Once a week, no more.",
+    "label": "Your email address",
+    "exemple": "name@example.com",
+    "bouton": "Sign up",
+    "envoi": "Sending…",
+    "mention": "An address, nothing else. One-click unsubscribe in every email. Never sold to third parties.",
+    "erreurGenerique": "Sign-up did not go through.",
+    "tropDEssais": "Too many attempts. Try again in a few minutes.",
+    "adresseInvalide": "That address does not look valid.",
+    "enregistrementImpossible": "Could not save your address right now.",
+    "confirmation": "You’re on the list. See you very soon."
+  },
+  "pied": {
+    "phrase": "MUK is a generational cultural media exploring the people, ideas and creations shaping contemporary culture — with the ambition of becoming a genuine cultural movement.",
+    "rubriques": "Sections",
+    "leMedia": "The media",
+    "suivre": "Follow",
+    "mentions": "Legal notice",
+    "confidentialite": "Privacy",
+    "redaction": "Newsroom",
+    "droits": "All rights reserved."
+  },
+  "erreur": {
+    "code": "Error 404",
+    "titre": "This page",
+    "titreItalique": "no longer exists",
+    "texte": "The story may have been unpublished, or the address contains a typo.",
+    "retour": "Back to home"
+  }
+}

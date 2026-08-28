@@ -1,0 +1,8 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+# Contenu de démo écrit par l'adaptateur local (voir lib/db-local.js)
+/public/uploads/*
+!/public/uploads/.gitkeep

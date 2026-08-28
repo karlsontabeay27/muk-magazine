@@ -1,0 +1,355 @@
+@import 'tailwindcss';
+@import './fontes.css';
+
+/* =========================================================================
+   MUK — système de design
+
+   Registre : magazine culturel contemporain. Contraste dur, typographie
+   massive, grandes images, compositions asymétriques, beaucoup de blanc.
+   L'opposé exact de la charte ivoire/champagne du blog qui précédait.
+
+   Une seule couleur d'accent, l'outremer, tenue en réserve : le logo reste
+   noir ou blanc pour vivre sur n'importe quelle photo.
+   ========================================================================= */
+@theme {
+  /* --- Couleurs de marque, fixes dans les deux thèmes ------------------- */
+  --color-outremer: #1b22cc;
+  --color-outremer-clair: #6e75ff;
+  --color-outremer-voile: #ecedfb;
+
+  /* --- Jetons sémantiques : valeurs du thème clair ---------------------- */
+  --color-papier: #ffffff; /* fond de page */
+  --color-papier-casse: #f4f4f1; /* sections alternées */
+  --color-encre: #0a0a0b; /* texte principal, logo */
+  --color-encre-douce: #3f414d; /* texte courant long */
+  --color-gris: #6e7180; /* métadonnées, légendes */
+  --color-gris-faible: #a4a6b0; /* texte désactivé */
+  --color-filet: #e4e4e1; /* traits, bordures */
+  --color-accent: var(--color-outremer);
+  --color-accent-voile: var(--color-outremer-voile);
+
+  /* --- Typographies ----------------------------------------------------
+     Archivo Black    le logo et les très grands titres
+     Archivo          titres courants, navigation, interface
+     Instrument Serif chapôs, citations, descripteurs de rubrique
+     Newsreader       corps des articles, pensé pour la lecture longue
+     Auto-hébergées (app/fontes.css). Les piles de repli tiennent la mise
+     en page pendant le chargement des woff2. */
+  --font-massif: 'Archivo Black', 'Helvetica Neue', Impact, sans-serif;
+  --font-titre: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  --font-lecture: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  --ease-muk: cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+
+/* Mode sombre : on ne redéfinit que les jetons sémantiques. Les composants
+   écrivent `bg-papier` ou `text-encre` une fois et suivent le thème. */
+@layer base {
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-papier: #0b0b0d;
+      --color-papier-casse: #141418;
+      --color-encre: #f5f5f3;
+      --color-encre-douce: #c6c8d2;
+      --color-gris: #8c8f9e;
+      --color-gris-faible: #5c5f6b;
+      --color-filet: #26262b;
+      --color-accent: var(--color-outremer-clair);
+      --color-accent-voile: #191a3a;
+      color-scheme: dark;
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Bases
+   ------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background: var(--color-papier);
+  color: var(--color-encre);
+  font-family: var(--font-titre);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-encre);
+  color: var(--color-papier);
+}
+
+/* -------------------------------------------------------------------------
+   Utilitaires éditoriaux
+   ------------------------------------------------------------------------- */
+@utility contenu {
+  width: 100%;
+  max-width: 88rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.15rem, 4vw, 3rem);
+}
+
+/* Le titre de une : capitales massives, chasse resserrée jusqu'au contact. */
+@utility massif {
+  font-family: var(--font-massif);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+/* Titres courants : grotesque grasse, nettement moins brutale que le logo. */
+@utility titre {
+  font-family: var(--font-titre);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* Le romain italique, signature de MUK : chapôs, citations, rubriques. */
+@utility romain {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+}
+
+/* Étiquette de rubrique, en capitales espacées. */
+@utility surtitre {
+  font-family: var(--font-titre);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  line-height: 1;
+}
+
+/* Le filet fin qui sépare les blocs éditoriaux. */
+@utility filet {
+  height: 1px;
+  background: var(--color-filet);
+}
+
+/* -------------------------------------------------------------------------
+   Apparition au défilement — neutralisée sans JS et si l'utilisateur
+   préfère moins d'animations (voir components/Apparition.js).
+   ------------------------------------------------------------------------- */
+.apparition {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 700ms var(--ease-muk),
+    transform 700ms var(--ease-muk);
+}
+
+.apparition[data-visible='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .apparition {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Corps d'article — lecture longue en Newsreader
+   ------------------------------------------------------------------------- */
+.prose-muk {
+  font-family: var(--font-lecture);
+  font-size: 1.1875rem;
+  line-height: 1.72;
+  color: var(--color-encre-douce);
+}
+
+.prose-muk > * + * {
+  margin-top: 1.5em;
+}
+
+.prose-muk h2 {
+  font-family: var(--font-titre);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--color-encre);
+  margin-top: 2.2em;
+  scroll-margin-top: 6.5rem;
+}
+
+.prose-muk h3 {
+  font-family: var(--font-titre);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--color-encre);
+  margin-top: 2em;
+}
+
+/* La citation en romain italique, sans guillemets ni filet : c'est le
+   changement de fonte qui signale le décrochage. */
+.prose-muk blockquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--color-encre);
+  margin-block: 1.6em;
+  padding: 0;
+  max-width: 22ch;
+}
+
+.prose-muk a {
+  color: var(--color-encre);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 3px;
+  transition: color 180ms;
+}
+
+.prose-muk a:hover {
+  color: var(--color-accent);
+}
+
+.prose-muk hr {
+  border: 0;
+  height: 1px;
+  background: var(--color-filet);
+  margin-block: 2.6em;
+}
+
+/* -------------------------------------------------------------------------
+   Accessibilité — un focus toujours visible, y compris sur fond noir
+   ------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* -------------------------------------------------------------------------
+   Pages légales — mentions, confidentialité
+
+   Corps plus dense que celui des articles : ces textes se consultent pour y
+   trouver une ligne précise, ils ne se lisent pas d'un trait. Les zones à
+   compléter par la cliente sont signalées visuellement pour qu'aucune ne
+   parte en ligne par oubli.
+   ------------------------------------------------------------------------- */
+.legal {
+  font-family: var(--font-titre);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-encre-douce);
+}
+
+.legal > * + * {
+  margin-top: 1.15em;
+}
+
+.legal h2 {
+  font-family: var(--font-titre);
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-encre);
+  margin-top: 2.6em;
+  padding-top: 1.4em;
+  border-top: 1px solid var(--color-filet);
+  scroll-margin-top: 6.5rem;
+}
+
+.legal h3 {
+  font-family: var(--font-titre);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--color-encre);
+  margin-top: 2em;
+}
+
+.legal ul {
+  list-style: none;
+  padding: 0;
+}
+
+.legal li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-top: 0.55em;
+}
+
+.legal li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.75em;
+  width: 0.65rem;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+.legal dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.35rem 2rem;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .legal dl {
+    grid-template-columns: 13rem 1fr;
+  }
+}
+
+.legal dt {
+  color: var(--color-gris);
+}
+
+.legal dd {
+  margin: 0;
+  color: var(--color-encre);
+}
+
+.legal a {
+  color: var(--color-encre);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 3px;
+}
+
+.legal a:hover {
+  color: var(--color-accent);
+}
+
+/* Marqueur des informations que seule la cliente peut fournir. Impossible à
+   rater à la relecture, et facile à retrouver : cherchez « À COMPLÉTER ». */
+.legal .a-completer {
+  display: inline-block;
+  background: var(--color-accent-voile);
+  color: var(--color-accent);
+  font-weight: 600;
+  font-size: 0.9em;
+  padding: 0.05em 0.45em;
+  border-bottom: 2px solid var(--color-accent);
+}

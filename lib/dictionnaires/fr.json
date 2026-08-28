@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "titre": "MUK — média culturel",
+    "description": "MUK est un média culturel générationnel qui explore les personnes, les idées et les créations qui façonnent notre culture contemporaine."
+  },
+  "nav": {
+    "accueil": "Accueil",
+    "rubriques": "Rubriques",
+    "newsletter": "Newsletter",
+    "ouvrirMenu": "Ouvrir le menu",
+    "fermerMenu": "Fermer le menu",
+    "changerLangue": "Changer de langue",
+    "versLangue": "Lire en anglais"
+  },
+  "accueil": {
+    "aLaUne": "À la une",
+    "derniers": "Derniers",
+    "derniersItalique": "contenus",
+    "toutVoir": "Tout voir"
+  },
+  "article": {
+    "lecture": "{minutes} min",
+    "sommaire": "Au sommaire",
+    "galerie": "La galerie",
+    "piecesTenue": "Les pièces de la tenue",
+    "retour": "Retour à MUK {rubrique}",
+    "aLireEnsuite": "À lire",
+    "aLireEnsuiteItalique": "ensuite",
+    "traductionAbsente": "Cet article n’existe pour l’instant qu’en français.",
+    "traductionAbsenteEn": "Cet article n’existe pour l’instant qu’en anglais.",
+    "lireQuandMeme": "Le lire dans sa langue d’origine"
+  },
+  "rubrique": {
+    "compteur_un": "{n} contenu",
+    "compteur_autre": "{n} contenus"
+  },
+  "galerie": {
+    "agrandir": "Agrandir la photo {n} sur {total}",
+    "fermer": "Fermer",
+    "precedente": "Photo précédente",
+    "suivante": "Photo suivante"
+  },
+  "newsletter": {
+    "titre": "Rejoindre",
+    "titreItalique": "la communauté",
+    "texte": "Les nouveaux articles, les recommandations culturelles, les playlists, les appels à candidatures et les créateurs qu’on découvre. Une fois par semaine, pas plus.",
+    "label": "Votre adresse e-mail",
+    "exemple": "prenom@exemple.com",
+    "bouton": "S’inscrire",
+    "envoi": "Envoi…",
+    "mention": "Une adresse, rien d’autre. Désinscription en un clic dans chaque envoi. Aucune revente à des tiers.",
+    "erreurGenerique": "L’inscription n’a pas abouti.",
+    "tropDEssais": "Trop de tentatives. Réessayez dans quelques minutes.",
+    "adresseInvalide": "Cette adresse ne semble pas valide.",
+    "enregistrementImpossible": "Enregistrement impossible pour le moment.",
+    "confirmation": "C’est noté. À très vite dans votre boîte."
+  },
+  "pied": {
+    "phrase": "MUK est un média culturel générationnel qui explore les personnes, les idées et les créations qui façonnent notre culture contemporaine — avec l’ambition de devenir un véritable mouvement culturel.",
+    "rubriques": "Rubriques",
+    "leMedia": "Le média",
+    "suivre": "Suivre",
+    "mentions": "Mentions légales",
+    "confidentialite": "Confidentialité",
+    "redaction": "Rédaction",
+    "droits": "Tous droits réservés."
+  },
+  "erreur": {
+    "code": "Erreur 404",
+    "titre": "Cette page",
+    "titreItalique": "n’existe plus",
+    "texte": "Le contenu a peut-être été dépublié, ou l’adresse comporte une coquille.",
+    "retour": "Retour à l’accueil"
+  }
+}
