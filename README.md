@@ -112,6 +112,7 @@ La marche à suivre pas à pas, dans l'ordre du soir de livraison :
 | `NEXT_PUBLIC_SUPABASE_URL` | URL du projet, sans chemin ni slash final |
 | `SUPABASE_SERVICE_ROLE_KEY` | La clé **secrète** — jamais préfixée `NEXT_PUBLIC_` |
 | `NEXT_PUBLIC_SITE_URL` | L'adresse publique, ex. `https://muk.fr` |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Limiteur de débit partagé — voir § Anti-forçage brutal |
 
 L'application **refuse la clé publique** (`sb_publishable_…`) : elle est bridée
 par les politiques RLS et provoquerait des erreurs incompréhensibles en pleine
@@ -199,6 +200,37 @@ la formulation compte — affichées à la rédaction après la traduction.
 
 Sans `ANTHROPIC_API_KEY`, le bouton est désactivé et la traduction manuelle
 reste possible. Rien d'autre ne change.
+
+---
+
+## Anti-forçage brutal
+
+Deux routes limitent le nombre de tentatives par adresse IP : la connexion à
+la rédaction (5 essais / 10 min) et l'inscription newsletter (3 / 10 min).
+
+**Sur une infrastructure classique, un `Map()` en mémoire suffirait.** Pas sur
+Vercel : chaque instance serverless a sa propre mémoire, un cold start ou une
+deuxième instance en parallèle repart de zéro. Un compteur en mémoire n'y
+protège quasiment pas contre un forçage distribué.
+
+`lib/limiteur.js` utilise donc [Upstash Redis](https://console.upstash.com) —
+un compteur partagé, joignable en HTTP (donc sans connexion persistante à
+maintenir, adapté au serverless). Le plan gratuit (10 000 commandes/jour)
+tient très largement pour ce volume.
+
+### Mise en place (5 min)
+
+1. [console.upstash.com](https://console.upstash.com) → créer une base
+   **Redis** (région proche de celle de Vercel/Supabase).
+2. Onglet **REST API** → copier `UPSTASH_REDIS_REST_URL` et
+   `UPSTASH_REDIS_REST_TOKEN`.
+3. Coller les deux dans `.env.local`, et dans **Vercel → Settings →
+   Environment Variables**, puis redéployer.
+
+Sans ces deux variables, l'application **fonctionne quand même** — elle
+retombe sur le compteur en mémoire et le signale une fois dans les journaux
+du serveur (`[MUK] UPSTASH_REDIS_REST_URL / ... absentes`). C'est voulu : le
+développement local n'a pas besoin d'un compte Upstash.
 
 ---
 

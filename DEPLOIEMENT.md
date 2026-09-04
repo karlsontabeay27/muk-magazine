@@ -102,6 +102,21 @@ sur GitHub, et `git push`.
 
 3. **Deploy**. Environ deux minutes.
 
+## 4bis. Limiteur de débit (10 min, fortement conseillé)
+
+Sans cette étape, la limite « 5 essais de connexion / 10 min » ne protège
+presque rien sur Vercel — chaque instance serverless a sa propre mémoire.
+
+1. [console.upstash.com](https://console.upstash.com) → créer une base Redis
+   (plan gratuit, région proche de Vercel).
+2. Onglet **REST API** → copier `UPSTASH_REDIS_REST_URL` et
+   `UPSTASH_REDIS_REST_TOKEN`.
+3. Vercel → **Environment Variables** → ajouter les deux, sur les trois
+   environnements → **Redeploy**.
+
+Vérifier : les journaux Vercel de la fonction `/api/auth/login` ne doivent
+plus afficher l'avertissement `[MUK] UPSTASH_REDIS_REST_URL ... absentes`.
+
 ---
 
 ## 5. Nom de domaine (facultatif, 10 min + propagation)

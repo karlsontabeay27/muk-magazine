@@ -1,19 +1,10 @@
 import { NextResponse } from 'next/server';
 import { emailPlausible, inscrire } from '@/lib/abonnes';
 import { traducteur } from '@/lib/i18n';
+import { tropDeTentatives } from '@/lib/limiteur';
 
-// Ralentisseur mémoire : la route est publique, donc ouverte à l'inondation.
-// Trois inscriptions par IP toutes les dix minutes suffisent largement.
-const ESSAIS = new Map();
-const FENETRE = 10 * 60 * 1000;
 const MAX = 3;
-
-function tropDEssais(ip) {
-  const maintenant = Date.now();
-  const historique = (ESSAIS.get(ip) ?? []).filter((t) => maintenant - t < FENETRE);
-  ESSAIS.set(ip, historique);
-  return historique.length >= MAX;
-}
+const FENETRE_SECONDES = 10 * 60;
 
 export async function POST(requete) {
   const ip = requete.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local';
@@ -25,15 +16,13 @@ export async function POST(requete) {
   const code = langue === 'en' ? 'en' : 'fr';
   const t = traducteur(code);
 
-  if (tropDEssais(ip)) {
-    return NextResponse.json({ erreur: t('newsletter.tropDEssais') }, { status: 429 });
-  }
-
   if (!emailPlausible(email)) {
     return NextResponse.json({ erreur: t('newsletter.adresseInvalide') }, { status: 422 });
   }
 
-  ESSAIS.set(ip, [...(ESSAIS.get(ip) ?? []), Date.now()]);
+  if (await tropDeTentatives('newsletter', ip, MAX, FENETRE_SECONDES)) {
+    return NextResponse.json({ erreur: t('newsletter.tropDEssais') }, { status: 429 });
+  }
 
   try {
     await inscrire(email, code);
