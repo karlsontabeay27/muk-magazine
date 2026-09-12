@@ -113,6 +113,7 @@ La marche à suivre pas à pas, dans l'ordre du soir de livraison :
 | `SUPABASE_SERVICE_ROLE_KEY` | La clé **secrète** — jamais préfixée `NEXT_PUBLIC_` |
 | `NEXT_PUBLIC_SITE_URL` | L'adresse publique, ex. `https://muk.fr` |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Limiteur de débit partagé — voir § Anti-forçage brutal |
+| `CRON_SECRET` | Authentifie le cron de réveil Supabase — voir § Le projet Supabase s'endort |
 
 L'application **refuse la clé publique** (`sb_publishable_…`) : elle est bridée
 par les politiques RLS et provoquerait des erreurs incompréhensibles en pleine
@@ -231,6 +232,38 @@ Sans ces deux variables, l'application **fonctionne quand même** — elle
 retombe sur le compteur en mémoire et le signale une fois dans les journaux
 du serveur (`[MUK] UPSTASH_REDIS_REST_URL / ... absentes`). C'est voulu : le
 développement local n'a pas besoin d'un compte Upstash.
+
+---
+
+## Le projet Supabase s'endort — et comment l'en empêcher
+
+**Incident du 12 septembre 2026 :** treize jours sans usage réel après le
+déploiement, et la sauvegarde d'un article s'est mise à échouer avec un
+message générique (« L'enregistrement a échoué »), sans piste. Cause :
+Supabase met en pause un projet du plan gratuit après **sept jours sans
+requête**. Le site public restait visible (pages mises en cache par Next.js),
+mais toute écriture réelle échouait — le projet était injoignable au sens
+réseau (`Could not resolve host`), pas juste lent.
+
+C'était déjà écrit dans `DEPLOIEMENT.md`, mais un avertissement dans un
+fichier ne réveille pas un projet tout seul. Deux correctifs :
+
+**1. Les routes d'écriture renvoient maintenant un message lisible.**
+`lib/erreur-api.js` attrape les erreurs de base et distingue « Supabase
+injoignable, peut-être en pause » d'une vraie erreur serveur — au lieu du
+500 au corps vide qui a rendu l'incident du 12 septembre difficile à
+diagnostiquer.
+
+**2. Un cron Vercel réveille le projet chaque lundi**, largement avant les
+sept jours de la fenêtre de pause. `vercel.json` déclenche
+`/api/cron/ping-supabase`, qui se contente de lire un contenu — juste assez
+pour compter comme une vraie requête. La route est protégée par
+`CRON_SECRET` : Vercel l'envoie automatiquement dans l'en-tête
+`Authorization` de chaque déclenchement, donc rien d'autre à faire une fois
+la variable renseignée sur Vercel.
+
+Vérifier que le cron tourne : **Vercel → Project → Cron Jobs** affiche
+l'historique des déclenchements et leur statut.
 
 ---
 

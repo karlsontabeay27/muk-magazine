@@ -2,12 +2,15 @@ import { NextResponse } from 'next/server';
 import { creerArticle, listerArticles } from '@/lib/db';
 import { normaliser, valider } from '@/lib/article';
 import { refuserSiNonConnecte, sessionOuverte } from '@/lib/garde';
+import { avecGardeErreur } from '@/lib/erreur-api';
 
 /** GET /api/articles — les brouillons ne sortent que pour une session ouverte. */
 export async function GET() {
-  const connectee = await sessionOuverte();
-  const articles = await listerArticles({ inclureBrouillons: connectee });
-  return NextResponse.json({ articles });
+  return avecGardeErreur(async () => {
+    const connectee = await sessionOuverte();
+    const articles = await listerArticles({ inclureBrouillons: connectee });
+    return NextResponse.json({ articles });
+  });
 }
 
 /** POST /api/articles — création. */
@@ -21,6 +24,8 @@ export async function POST(requete) {
   const erreurs = valider(normaliser(corps));
   if (erreurs.length > 0) return NextResponse.json({ erreurs }, { status: 422 });
 
-  const article = await creerArticle(corps);
-  return NextResponse.json({ article }, { status: 201 });
+  return avecGardeErreur(async () => {
+    const article = await creerArticle(corps);
+    return NextResponse.json({ article }, { status: 201 });
+  });
 }

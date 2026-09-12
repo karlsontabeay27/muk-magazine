@@ -90,6 +90,7 @@ sur GitHub, et `git push`.
    | `NEXT_PUBLIC_SUPABASE_URL` | `https://xceibgdsonjvqqfqsacd.supabase.co` |
    | `SUPABASE_SERVICE_ROLE_KEY` | la clé secrète de l'étape 1 |
    | `NEXT_PUBLIC_SITE_URL` | l'adresse finale, sans slash final |
+   | `CRON_SECRET` | génère une nouvelle valeur avec la commande ci-dessus, garde-la aussi en local |
 
    ```bash
    node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
