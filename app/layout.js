@@ -79,5 +79,6 @@ export async function generateMetadata() {
     },
     twitter: { card: 'summary_large_image' },
     robots: { index: true, follow: true },
+    verification: { google: '7BnESqQA23XmXRnVW1eSm-eMROnfyjPJQKqjRKKnp5g' },
   };
 }
