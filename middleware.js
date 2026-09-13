@@ -13,7 +13,16 @@ import { CODES, ENTETE_LANGUE, LANGUE_DEFAUT, langueDepuisEntete } from '@/lib/i
  *    préfixe est redirigée vers la langue du navigateur, ce qui laisse
  *    « monsite.fr » utilisable tel quel dans la vie courante.
  */
-const SANS_PREFIXE = ['/admin', '/api', '/_next', '/favicon.ico', '/icon.svg', '/robots.txt', '/sitemap.xml'];
+const SANS_PREFIXE = [
+  '/admin',
+  '/api',
+  '/_next',
+  '/favicon.ico',
+  '/icon.svg',
+  '/robots.txt',
+  '/sitemap.xml',
+  '/opengraph-image',
+];
 
 // Fichiers servis depuis /public : ils ne doivent jamais être préfixés.
 const EST_FICHIER = /\.[a-z0-9]+$/i;
