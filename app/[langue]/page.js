@@ -9,6 +9,7 @@ import { listerArticles } from '@/lib/db';
 import { rubriquesVivantes } from '@/lib/rubriques';
 import { CODES, langueValide, traducteur } from '@/lib/i18n';
 import { alternatesDepuis, liensDirects } from '@/lib/liens';
+import { SITE_URL } from '@/lib/site';
 
 // La page se recalcule à chaque visite : un contenu publié apparaît sans
 // redéploiement ni délai de cache.
@@ -45,9 +46,34 @@ export default async function Accueil({ params }) {
 
   const rubriques = rubriquesVivantes(contenus);
 
+  // Organisation + site : hors de generateMetadata (qui ne rend que des
+  // balises <meta>), donc posé ici en JSON-LD. C'est ce schéma que Google
+  // utilise pour le logo affiché à côté du nom du site dans les résultats.
+  const donneesStructurees = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        name: 'MUK',
+        url: SITE_URL,
+        logo: `${SITE_URL}/marque/muk-tampon-512.png`,
+      },
+      {
+        '@type': 'WebSite',
+        name: 'MUK',
+        url: SITE_URL,
+      },
+    ],
+  };
+
   return (
     <>
       <Entete langue={langue} rubriques={rubriques} liensLangue={liensDirects('')} />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(donneesStructurees) }}
+      />
 
       <main>
         <Une contenu={une} langue={langue} />
