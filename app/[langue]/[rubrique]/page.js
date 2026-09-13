@@ -7,12 +7,14 @@ import BlocNewsletter from '@/components/BlocNewsletter';
 import { listerArticles } from '@/lib/db';
 import {
   RUBRIQUES,
+  nomRubrique,
   resumeRubrique,
   rubriquesVivantes,
   trouverRubrique,
 } from '@/lib/rubriques';
 import { langueValide, traducteur } from '@/lib/i18n';
 import { alternatesDepuis, liensDirects } from '@/lib/liens';
+import { SITE_URL } from '@/lib/site';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,6 +49,20 @@ export default async function PageRubrique({ params }) {
 
   const rubriques = rubriquesVivantes(tous);
 
+  const filAriane = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'MUK', item: `${SITE_URL}/${langue}` },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: nomRubrique(r, langue),
+        item: `${SITE_URL}/${langue}/${r.id}`,
+      },
+    ],
+  };
+
   return (
     <>
       <Entete
@@ -54,6 +70,11 @@ export default async function PageRubrique({ params }) {
         rubriques={rubriques}
         descripteur={r.descripteur}
         liensLangue={liensDirects(`/${r.id}`)}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(filAriane) }}
       />
 
       <main>

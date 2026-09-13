@@ -16,6 +16,7 @@ import { nomFormat, trouverFormat } from '@/lib/formats';
 import { estTenue } from '@/lib/article';
 import { langueValide, traducteur } from '@/lib/i18n';
 import { alternatesDepuis, liensArticle } from '@/lib/liens';
+import { SITE_URL } from '@/lib/site';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,16 +75,38 @@ export default async function PageArticle({ params }) {
 
   const donneesStructurees = {
     '@context': 'https://schema.org',
-    '@type': 'NewsArticle',
-    inLanguage: langue,
-    headline: contenu.titre,
-    description: contenu.chapeau,
-    datePublished: contenu.datePublication,
-    dateModified: contenu.dateMaj,
-    author: { '@type': 'Person', name: contenu.auteur },
-    articleSection: nomRubrique(rubrique, langue),
-    image: contenu.couverture ? [contenu.couverture] : undefined,
-    publisher: { '@type': 'Organization', name: 'MUK' },
+    '@graph': [
+      {
+        '@type': 'NewsArticle',
+        inLanguage: langue,
+        headline: contenu.titre,
+        description: contenu.chapeau,
+        datePublished: contenu.datePublication,
+        dateModified: contenu.dateMaj,
+        author: { '@type': 'Person', name: contenu.auteur },
+        articleSection: nomRubrique(rubrique, langue),
+        image: contenu.couverture ? [contenu.couverture] : undefined,
+        publisher: { '@type': 'Organization', name: 'MUK' },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'MUK', item: `${SITE_URL}/${langue}` },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: nomRubrique(rubrique, langue),
+            item: `${SITE_URL}/${langue}/${rubrique.id}`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: contenu.titre,
+            item: `${SITE_URL}/${langue}/article/${contenu.slug}`,
+          },
+        ],
+      },
+    ],
   };
 
   return (
